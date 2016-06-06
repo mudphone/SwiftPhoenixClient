@@ -19,6 +19,7 @@
 		0BFAE5091DA853B5000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
 		0BFAE50A1DA853EE000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
 		0BFAE50C1DA85527000B3CD3 /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE50B1DA85527000B3CD3 /* PathTests.swift */; };
+		CF9CAD041DF0D80300734BF0 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF9CAD031DF0D80300734BF0 /* Presence.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		0BFAE5001DA84FF2000B3CD3 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 		0BFAE5081DA853B5000B3CD3 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Vendor/Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		0BFAE50B1DA85527000B3CD3 /* PathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
+		CF9CAD031DF0D80300734BF0 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				0BFAE4FE1DA84FF2000B3CD3 /* Path.swift */,
 				0B8517E21DAC11C80093A015 /* Socket.swift */,
 				0B8517E41DAC12F40093A015 /* Channel.swift */,
+				CF9CAD031DF0D80300734BF0 /* Presence.swift */,
 				0B8517E61DAC38E00093A015 /* Binding.swift */,
 				0B8517E81DAC39270093A015 /* Message.swift */,
 				0BFAE4FF1DA84FF2000B3CD3 /* Payload.swift */,
@@ -238,6 +241,7 @@
 				0BFAE5031DA84FF2000B3CD3 /* Serializable.swift in Sources */,
 				0BFAE5011DA84FF2000B3CD3 /* Path.swift in Sources */,
 				0BFAE5021DA84FF2000B3CD3 /* Payload.swift in Sources */,
+				CF9CAD041DF0D80300734BF0 /* Presence.swift in Sources */,
 				0B8517E91DAC39270093A015 /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
