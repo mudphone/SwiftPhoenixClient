@@ -7,10 +7,13 @@ import Swift
 
 public class Presence {
   public typealias Dictionary = [String: AnyObject]
-  public typealias State = [String: Dictionary]
-  public typealias Callback = (String, Dictionary?, Dictionary?) -> ()
+  public typealias PresenceDict = Dictionary
+  public typealias State = [String: PresenceDict]
+  public typealias Callback = (String, PresenceDict?, PresenceDict?) -> ()
   
-  static func voidCallback(key: String, currentPresence: Dictionary?, newPresence: Dictionary?) -> () {}
+  static func voidCallback(key: String,
+                           currentPresence: PresenceDict?,
+                           newPresence: PresenceDict?) -> () {}
   
   /**
    Used to sync the list of presences on the server with the client
@@ -64,12 +67,12 @@ public class Presence {
     return syncDiff(state: state, joins: joins, leaves: leaves, onJoin: onJoin, onLeave: onLeave)
   }
   
-  func refs(_ presence: Dictionary) -> [String] {
+  func refs(_ presence: PresenceDict) -> [String] {
     let meta = metas(presence)
     return meta.map { $0["phx_refs"]! as! String }
   }
   
-  func metas(_ presence: Dictionary) -> [Dictionary] {
+  func metas(_ presence: PresenceDict) -> [Dictionary] {
     if let meta = presence["metas"] {
       return meta as! [Dictionary]
     } else {
@@ -121,13 +124,19 @@ public class Presence {
     return newState
   }
   
+  public typealias Chooser = (String, PresenceDict) -> PresenceDict
+  static func defaultChooser(key: String, presence: PresenceDict) -> PresenceDict {
+    return presence
+  }
+  
   /**
    Returns a list of presence information based on the metadata
    
    - parameter presences: list of presences
    - parameter chooser: function for choosing metadata
    */
-  func list(presences: Dictionary, chooser: Dictionary) {
-    
+  func list(presences: State,
+            chooser: Chooser = Presence.defaultChooser) -> [PresenceDict] {
+    return presences.map { chooser($0, $1) }
   }
 }
