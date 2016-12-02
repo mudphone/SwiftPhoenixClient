@@ -89,7 +89,6 @@ public class Presence {
   func syncDiff(state: State, joins: State, leaves: State,
                 onJoin: Callback = Presence.voidCallback,
                 onLeave: Callback = Presence.voidCallback ) -> State {
-  
     var newState = state
     
     for (key, newPresence) in joins {
@@ -106,20 +105,19 @@ public class Presence {
     
     for (key, leftPresence) in leaves {
       if let currentPresence = state[key] {
-        let refsToRemove = refs(leftPresence)
         var upd = currentPresence
-        let updMetas = metas(currentPresence).filter {
+        let refsToRemove = refs(leftPresence)
+        upd["metas"] = metas(currentPresence).filter {
           !refsToRemove.contains($0["phx_ref"] as! String)
-        }
-        upd["metas"] = updMetas as AnyObject?
-        onLeave(key, currentPresence, leftPresence)
+        } as AnyObject?
+        newState[key] = upd
+        onLeave(key, upd, leftPresence)
         
-        if metas(currentPresence).isEmpty {
+        if metas(upd).isEmpty {
           newState.removeValue(forKey: key)
         }
       }
     }
-    
     return newState
   }
   
