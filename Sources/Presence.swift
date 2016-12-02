@@ -37,16 +37,10 @@ public class Presence {
         let newRefs = refs(newPresence)
         let curRefs = refs(currentPresence)
         let joinedMetas = metas(newPresence).filter {
-          if let ref = $0["phx_ref"] as? String {
-            return !curRefs.contains(ref)
-          }
-          else { return false }
+          !curRefs.contains($0["phx_ref"] as! String)
         }
         let leftMetas = metas(currentPresence).filter {
-          if let ref = $0["phx_ref"] as? String {
-            return !newRefs.contains(ref)
-          }
-          else { return false }
+          !newRefs.contains($0["phx_ref"] as! String)
         }
         
         if joinedMetas.count > 0 {
@@ -69,7 +63,7 @@ public class Presence {
   
   func refs(_ presence: Dictionary) -> [String] {
     let meta = metas(presence)
-    return meta.map { m in m["phx_refs"]! as! String }
+    return meta.map { $0["phx_refs"]! as! String }
   }
   
   func metas(_ presence: Dictionary) -> [Dictionary] {
