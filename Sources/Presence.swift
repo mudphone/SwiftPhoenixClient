@@ -6,9 +6,11 @@
 import Swift
 
 public class Presence {
-  typealias Dictionary = [String: AnyObject]
-  typealias State = [String: Dictionary]
-  typealias Callback = (String, Dictionary, Dictionary) -> Void
+  public typealias Dictionary = [String: AnyObject]
+  public typealias State = [String: Dictionary]
+  public typealias Callback = (String, Dictionary?, Dictionary?) -> ()
+  
+  static func voidCallback(key: String, currentPresence: Dictionary?, newPresence: Dictionary?) -> () {}
   
   /**
    Used to sync the list of presences on the server with the client
@@ -22,7 +24,7 @@ public class Presence {
    - parameter onJoin:   join callback
    - parameter onLeave:  leave callback
    */
-  func syncState(state: State, newState: State, onJoin: Callback, onLeave: Callback) {
+  func syncState(state: State, newState: State, onJoin: Callback, onLeave: Callback) -> State {
     var joins  = State()
     var leaves = State()
     
@@ -58,6 +60,7 @@ public class Presence {
         joins[key] = newPresence
       }
     }
+    
     return syncDiff(state: state, joins: joins, leaves: leaves, onJoin: onJoin, onLeave: onLeave)
   }
   
@@ -83,8 +86,41 @@ public class Presence {
    - parameter onJoin:  join callback
    - parameter onLeave: leave callback
    */
-  func syncDiff(state: State, joins: State, leaves: State, onJoin: Callback, onLeave: Callback) {
+  func syncDiff(state: State, joins: State, leaves: State,
+                onJoin: Callback = Presence.voidCallback,
+                onLeave: Callback = Presence.voidCallback ) -> State {
+  
+    var newState = state
     
+    for (key, newPresence) in joins {
+      let currentPresence = state[key]
+      if let currentPresence = currentPresence {
+        var upd = newPresence
+        upd["metas"] = [metas(newPresence), metas(currentPresence)].joined() as AnyObject?
+        newState[key] = upd
+      } else {
+        newState[key] = newPresence
+      }
+      onJoin(key, currentPresence, newPresence)
+    }
+    
+    for (key, leftPresence) in leaves {
+      if let currentPresence = state[key] {
+        let refsToRemove = refs(leftPresence)
+        var upd = currentPresence
+        let updMetas = metas(currentPresence).filter {
+          !refsToRemove.contains($0["phx_ref"] as! String)
+        }
+        upd["metas"] = updMetas as AnyObject?
+        onLeave(key, currentPresence, leftPresence)
+        
+        if metas(currentPresence).isEmpty {
+          newState.removeValue(forKey: key)
+        }
+      }
+    }
+    
+    return newState
   }
   
   /**
